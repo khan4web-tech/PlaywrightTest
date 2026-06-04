@@ -1,0 +1,16 @@
+name: Team B Tests
+
+on:
+  push:
+    paths:
+      - "services/pod-b/**"
+  pull_request:
+    paths:
+      - "services/pod-b/**"
+
+jobs:
+  call-reusable:
+    uses: ./.github/workflows/reusable-test.yml
+    with:
+      service-path: services/pod-b
+      node-version: '20'

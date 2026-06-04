@@ -1,0 +1,16 @@
+name: Team C Tests
+
+on:
+  push:
+    paths:
+      - "services/pod-c/**"
+  pull_request:
+    paths:
+      - "services/pod-c/**"
+
+jobs:
+  call-reusable:
+    uses: ./.github/workflows/reusable-test.yml
+    with:
+      service-path: services/pod-c
+      node-version: '20'

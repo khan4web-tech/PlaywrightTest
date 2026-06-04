@@ -1,0 +1,25 @@
+name: Integration Tests
+
+on:
+  workflow_run:
+    workflows:
+      - "Team A Tests"
+      - "Team B Tests"
+      - "Team C Tests"
+    types:
+      - completed
+
+jobs:
+  integration:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+      - name: Run integration tests
+        run: |
+          npm ci
+          npm run integration-test
