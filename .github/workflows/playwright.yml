@@ -32,17 +32,9 @@ jobs:
         run: npm test
 
   test-docker:
-    name: Test (${{ matrix.os }} - Docker)
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            container: mcr.microsoft.com/playwright:v1.45.0-focal
-          - os: windows-latest
-            container: mcr.microsoft.com/playwright:v1.45.0-windows
-
-    container: ${{ matrix.container }}
+    name: Test (Ubuntu - Docker)
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.45.0-focal
 
     steps:
       - uses: actions/checkout@v4
