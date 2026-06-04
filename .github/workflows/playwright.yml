@@ -12,7 +12,23 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        include:
+          - name: "Ubuntu (Native)"
+            os: ubuntu-latest
+            use-container: false
+          - name: "Windows (Native)"
+            os: windows-latest
+            use-container: false
+          - name: "Ubuntu (Docker)"
+            os: ubuntu-latest
+            use-container: true
+            container-image: mcr.microsoft.com/playwright:v1.45.0-focal
+          - name: "Windows (Docker)"
+            os: windows-latest
+            use-container: true
+            container-image: mcr.microsoft.com/playwright:v1.45.0-windows
+
+    container: ${{ matrix.use-container && fromJson(format('{{\"image\": \"{0}\"}}', matrix.container-image)) || null }}
 
     steps:
       - uses: actions/checkout@v4
@@ -20,12 +36,14 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+        if: ${{ !matrix.use-container }}
 
       - name: Install dependencies
         run: npm install
 
-      - name: Install Playwright browsers
+      - name: Install Playwright browsers (Native only)
         run: npx playwright install --with-deps
+        if: ${{ !matrix.use-container }}
 
       - name: Run Playwright tests
         run: npm test
